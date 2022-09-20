@@ -47,6 +47,7 @@ in {
       zathura
       jq
       bat
+      rubyPackages.solargraph
     ];
   };
   programs = {
@@ -96,48 +97,6 @@ in {
         }
       ];
     };
-    neovim = {
-      enable = true;
-      plugins = with pkgs.vimPlugins; [
-      	vim-nix
-	vim-fugitive
-	nvim-tree-lua
-	nvim-treesitter-textobjects
-        which-key-nvim
-        nvim-cmp
-        cmp-path
-        cmp-nvim-lsp
-        cmp-buffer
-        nvim-lspconfig
-        {
-          plugin = nvim-tree-lua;
-          type = "lua";
-          config = readFile ./neovim/vim-tree.lua;
-        }
-        {
-          plugin = catppuccin-nvim;
-          type = "lua";
-          config = readFile ./neovim/catpuccin.lua;
-        }
-        {
-          plugin = which-key-nvim;
-          type = "lua";
-          config = readFile ./neovim/which-key.lua;
-        }
-        {
-          plugin = fzf-lua;
-          type = "lua";
-          config = readFile ./neovim/fzf.lua;
-        }
-        {
-          plugin = (nvim-treesitter.withPlugins(
-            plugins: pkgs.tree-sitter.allGrammars
-          ));
-          type = "lua";
-          config = readFile ./neovim/nvim-treesitter.lua;
-        }
-      ];
-    };
     htop = {
       enable = true;
     };
@@ -154,4 +113,59 @@ in {
       enable = true;
     };
   };
+
+  programs.neovim = {
+    enable = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+    plugins = with pkgs.vimPlugins; [
+      vim-nix
+      vim-fugitive
+      nvim-tree-lua
+      nvim-treesitter-textobjects
+      which-key-nvim
+      nvim-cmp
+      cmp-path
+      cmp-nvim-lsp
+      cmp-buffer
+      {
+        plugin = nvim-lspconfig;
+        type = "lua";
+        config = readFile ./neovim/lsp.lua;
+      }
+      nvim-lspconfig
+      {
+        plugin = nvim-tree-lua;
+        type = "lua";
+        config = readFile ./neovim/vim-tree.lua;
+      }
+      {
+        plugin = catppuccin-nvim;
+        type = "lua";
+        config = readFile ./neovim/catpuccin.lua;
+      }
+      {
+        plugin = which-key-nvim;
+        type = "lua";
+        config = readFile ./neovim/which-key.lua;
+      }
+      {
+        plugin = fzf-lua;
+        type = "lua";
+        config = readFile ./neovim/fzf.lua;
+      }
+      {
+        plugin = nvim-treesitter.withPlugins (
+          plugins: pkgs.tree-sitter.allGrammars
+        );
+        type = "lua";
+        config = readFile ./neovim/nvim-treesitter.lua;
+      }
+    ];
+  };
+
+  xdg.configFile.nvim = {
+    source = ./neovim-extra
+    recursive = true
+  }
 }
