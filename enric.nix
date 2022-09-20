@@ -110,6 +110,11 @@ in {
         cmp-buffer
         nvim-lspconfig
         {
+          plugin = nvim-tree-lua;
+          type = "lua";
+          config = readFile ./neovim/vim-tree.lua;
+        }
+        {
           plugin = catppuccin-nvim;
           type = "lua";
           config = readFile ./neovim/catpuccin.lua;
