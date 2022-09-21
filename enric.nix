@@ -40,6 +40,7 @@ in {
       gco = "git checkout";
       glr = "git pull --rebase";
       gp = "git push";
+      gd = "git diff";
     };
     stateVersion = "22.05";
     packages = with pkgs; [
@@ -121,6 +122,7 @@ in {
 
   programs.neovim = {
     enable = true;
+    package = pkgs.neovim-nightly;
     vimAlias = true;
     vimdiffAlias = true;
     plugins = with pkgs.vimPlugins; [

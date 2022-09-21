@@ -1,14 +1,17 @@
-vim.api.nvim_create_autocmd("LspAttach", {
-  callback = function(args)
-    local bufnr = args.buf
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
-    if client.server_capabilities.completionProvider then
-      vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
-    end
-    if client.server_capabilities.definitionProvider then
-      vim.bo[bufnr].tagfunc = "v:lua.vim.lsp.tagfunc"
-    end
-  end,
+
+local api = vim.api
+api.nvim_create_autocmd("LspAttach", {
+	callback = function(args)
+	print("Attached" .. args)
+end,
+})
+
+api.nvim_create_autocmd("BufEnter", {
+    pattern = "*",
+    callback = function(args)
+        print("Entered buffer " .. args.buf .. "!")
+    end,
+    desc = "Tell me when I enter a buffer",
 })
 
 lspconfig = require('lspconfig')
@@ -25,14 +28,3 @@ lspconfig.solargraph.setup{
 
 lspconfig.tsserver.setup{}
 lspconfig.sumneko_lua.setup{}
-
-if resolved_capabilities.goto_definition == true then
-    api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
-end
-
-if resolved_capabilities.document_formatting == true then
-    api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
-    -- Add this <leader> bound mapping so formatting the entire document is easier.
-    map("n", "<leader>gq", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-end
-

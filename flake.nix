@@ -2,12 +2,10 @@
   description = "NixOS configuration with two or more channels";
 
   inputs = {
-    nixpkgs = {
-      url = "nixpkgs/nixos-unstable";
-    };
-    nixpkgs-22_05 = {
-      url = "nixpkgs/nixos-22.05";
-    };
+    nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs-22_05.url = "nixpkgs/nixos-22.05";
+
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
 
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -17,6 +15,7 @@
     self,
     nixpkgs,
     nixpkgs-22_05,
+    neovim-nightly-overlay,
     home-manager,
     ...
   } @ inputs: let
@@ -29,6 +28,11 @@
         config.allowUnfree = true;
       };
     };
+
+    overlays = [
+      overlay-22_05
+      neovim-nightly-overlay.overlay 
+    ];
   in {
     nixosConfigurations."xps15" = nixosSystem {
       inherit system;
@@ -38,7 +42,7 @@
           config,
           pkgs,
           ...
-        }: {nixpkgs.overlays = [overlay-22_05];})
+        }: {nixpkgs.overlays = overlays;})
         ./configuration.nix
         home-manager.nixosModules.home-manager
         {
