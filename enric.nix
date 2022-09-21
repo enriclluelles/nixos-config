@@ -41,6 +41,7 @@ in {
       glr = "git pull --rebase";
       gp = "git push";
       gd = "git diff";
+      gss = "git status --short";
     };
     stateVersion = "22.05";
     packages = with pkgs; [
@@ -124,62 +125,27 @@ in {
     package = pkgs.neovim-nightly;
     vimAlias = true;
     vimdiffAlias = true;
-    plugins = with pkgs.vimPlugins; [
-      vim-nix
-      vim-fugitive
-      nvim-tree-lua
-      nvim-treesitter-textobjects
-      which-key-nvim
-      nvim-cmp
-      cmp-path
-      cmp-nvim-lsp
-      cmp-buffer
-      vim-go
-      {
-        plugin = nvim-lspconfig;
-        type = "lua";
-        config = readFile ./neovim-plugin-configs/lsp.lua;
-      }
-      nvim-lspconfig
-      {
-        plugin = nvim-tree-lua;
-        type = "lua";
-        config = readFile ./neovim-plugin-configs/vim-tree.lua;
-      }
-      {
-        plugin = catppuccin-nvim;
-        type = "lua";
-        config = readFile ./neovim-plugin-configs/catpuccin.lua;
-      }
-      {
-        plugin = which-key-nvim;
-        type = "lua";
-        config = readFile ./neovim-plugin-configs/which-key.lua;
-      }
-      {
-        plugin = fzf-lua;
-        type = "lua";
-        config = readFile ./neovim-plugin-configs/fzf.lua;
-      }
-      {
-        plugin = nvim-treesitter.withPlugins (
-          plugins: pkgs.tree-sitter.allGrammars
-        );
-        type = "lua";
-        config = readFile ./neovim-plugin-configs/nvim-treesitter.lua;
-      }
-    ];
+    plugins = [pkgs.vimPlugins.packer-nvim];
 
     extraPackages = with pkgs; [
       rubyPackages.solargraph
       sumneko-lua-language-server
       nodePackages.typescript-language-server
       gopls
+      tree-sitter
+tree-sitter-grammars.tree-sitter-go
+tree-sitter-grammars.tree-sitter-ruby
+tree-sitter-grammars.tree-sitter-tsx
+tree-sitter-grammars.tree-sitter-lua
     ];
+
+    extraConfig = ''
+    lua require('init')
+    '';
   };
 
-  xdg.configFile.nvim = {
-    source = ./neovim-extra;
+  xdg.configFile."nvim/lua" = {
+    source = ./neovim/lua;
     recursive = true;
   };
 }
