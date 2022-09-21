@@ -131,28 +131,28 @@ in {
       {
         plugin = nvim-lspconfig;
         type = "lua";
-        config = readFile ./neovim/lsp.lua;
+        config = readFile ./neovim-plugin-configs/lsp.lua;
       }
       nvim-lspconfig
       {
         plugin = nvim-tree-lua;
         type = "lua";
-        config = readFile ./neovim/vim-tree.lua;
+        config = readFile ./neovim-plugin-configs/vim-tree.lua;
       }
       {
         plugin = catppuccin-nvim;
         type = "lua";
-        config = readFile ./neovim/catpuccin.lua;
+        config = readFile ./neovim-plugin-configs/catpuccin.lua;
       }
       {
         plugin = which-key-nvim;
         type = "lua";
-        config = readFile ./neovim/which-key.lua;
+        config = readFile ./neovim-plugin-configs/which-key.lua;
       }
       {
         plugin = fzf-lua;
         type = "lua";
-        config = readFile ./neovim/fzf.lua;
+        config = readFile ./neovim-plugin-configs/fzf.lua;
       }
       {
         plugin = nvim-treesitter.withPlugins (
