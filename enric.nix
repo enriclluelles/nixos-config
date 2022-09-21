@@ -52,6 +52,7 @@ in {
       zathura
       jq
       bat
+
     ];
   };
   programs = {
@@ -132,6 +133,7 @@ in {
       cmp-path
       cmp-nvim-lsp
       cmp-buffer
+      vim-go
       {
         plugin = nvim-lspconfig;
         type = "lua";
@@ -165,6 +167,13 @@ in {
         type = "lua";
         config = readFile ./neovim-plugin-configs/nvim-treesitter.lua;
       }
+    ];
+
+    extraPackages = with pkgs; [
+      rubyPackages.solargraph
+      sumneko-lua-language-server
+nodePackages.typescript-language-server
+gopls
     ];
   };
 
