@@ -47,7 +47,7 @@ in {
       zathura
       jq
       bat
-      rubyPackages.solargraph
+      ruby
     ];
   };
   programs = {

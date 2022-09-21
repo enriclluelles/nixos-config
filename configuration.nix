@@ -14,14 +14,11 @@
     neovim
     git
     chezmoi
-    chruby
-    bundix
     alejandra
     terraform
     vim
     wget
     docker
-    gcc
     gnome3.gnome-tweaks
     libinput-gestures
     firefox
