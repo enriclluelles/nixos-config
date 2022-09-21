@@ -36,6 +36,11 @@
 in {
   home = {
     inherit username homeDirectory;
+    shellAliases = {
+      gco = "git checkout";
+      glr = "git pull --rebase";
+      gp = "git push";
+    };
     stateVersion = "22.05";
     packages = with pkgs; [
       tig
@@ -47,7 +52,6 @@ in {
       zathura
       jq
       bat
-      ruby
     ];
   };
   programs = {
