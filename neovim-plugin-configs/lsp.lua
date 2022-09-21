@@ -2,19 +2,19 @@
 local api = vim.api
 api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
-	print("Attached" .. args)
-end,
+		local bufnr = args.buf
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		if client.server_capabilities.completionProvider then
+			vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
+		end
+		if client.server_capabilities.definitionProvider then
+			vim.bo[bufnr].tagfunc = "v:lua.vim.lsp.tagfunc"
+		end
+	end,
 })
 
-api.nvim_create_autocmd("BufEnter", {
-    pattern = "*",
-    callback = function(args)
-        print("Entered buffer " .. args.buf .. "!")
-    end,
-    desc = "Tell me when I enter a buffer",
-})
 
-lspconfig = require('lspconfig')
+local lspconfig = require('lspconfig')
 
 lspconfig.solargraph.setup{
   settings = {

@@ -53,7 +53,6 @@ in {
       zathura
       jq
       bat
-
     ];
   };
   programs = {
@@ -174,8 +173,8 @@ in {
     extraPackages = with pkgs; [
       rubyPackages.solargraph
       sumneko-lua-language-server
-nodePackages.typescript-language-server
-gopls
+      nodePackages.typescript-language-server
+      gopls
     ];
   };
 

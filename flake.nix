@@ -31,7 +31,7 @@
 
     overlays = [
       overlay-22_05
-      neovim-nightly-overlay.overlay 
+      neovim-nightly-overlay.overlay
     ];
   in {
     nixosConfigurations."xps15" = nixosSystem {
