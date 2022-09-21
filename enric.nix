@@ -159,7 +159,7 @@ in {
           plugins: pkgs.tree-sitter.allGrammars
         );
         type = "lua";
-        config = readFile ./neovim/nvim-treesitter.lua;
+        config = readFile ./neovim-plugin-configs/nvim-treesitter.lua;
       }
     ];
   };
