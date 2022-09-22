@@ -27,6 +27,8 @@ return packer.startup(function(use)
     end,
   })
 
+  use({ "LnL7/vim-nix" })
+
   -- LSP
   use({ "williamboman/mason.nvim" }) -- An LSP installer
   use({ "williamboman/mason-lspconfig.nvim" }) -- Bridge between lspconfig and mason
@@ -75,7 +77,7 @@ return packer.startup(function(use)
       require("plugins/nvim-treesitter")
     end,
   })
-  use({"nvim-treesitter/nvim-treesitter-textobjects"})
+  use({ "nvim-treesitter/nvim-treesitter-textobjects" })
 
   -- Gitsigns
   use({

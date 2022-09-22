@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: let
   username = "enric";
@@ -33,6 +34,12 @@
   };
 
   rg = "${pkgs.ripgrep}/bin/rg";
+
+  gpkgname = g: lib.strings.removeSuffix "-grammar" g.pname;
+
+  gpkg = g: pkgs.tree-sitter-grammars.${(gpkgname g)};
+
+  all_grammar_pgs = map (g: gpkg g) pkgs.tree-sitter.allGrammars;
 in {
   home = {
     inherit username homeDirectory;
@@ -132,12 +139,9 @@ in {
       sumneko-lua-language-server
       nodePackages.typescript-language-server
       gopls
+      terraform-ls
       tree-sitter
-tree-sitter-grammars.tree-sitter-go
-tree-sitter-grammars.tree-sitter-ruby
-tree-sitter-grammars.tree-sitter-tsx
-tree-sitter-grammars.tree-sitter-lua
-    ];
+    ] ++ pkgs.tree-sitter.allGrammars;
 
     extraConfig = ''
     lua require('init')
