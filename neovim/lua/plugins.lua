@@ -30,15 +30,14 @@ return packer.startup(function(use)
   use({ "LnL7/vim-nix" })
 
   -- LSP
-  use({ "williamboman/mason.nvim" }) -- An LSP installer
-  use({ "williamboman/mason-lspconfig.nvim" }) -- Bridge between lspconfig and mason
   use({
     "neovim/nvim-lspconfig", -- A collection of common configurations for Neovim's built-in language server client.
     config = function()
-      require("plugins/mason")
       require("lsp")
     end
   })
+
+  use({ "hashivim/vim-terraform" })
 
   -- Illuminate
   use({
