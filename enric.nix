@@ -139,7 +139,7 @@ in {
       sumneko-lua-language-server
       nodePackages.typescript-language-server
       gopls
-#      terraform-ls
+      terraform-ls
       terraform-lsp
       tree-sitter
     ] ++ pkgs.tree-sitter.allGrammars;

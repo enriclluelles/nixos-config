@@ -28,36 +28,163 @@ lsp.handlers["textDocument/hover"] = lsp.with(lsp.handlers.hover, border_opts)
 local lsp_formatting = function(bufnr)
   lsp.buf.format({ bufnr = bufnr })
 end
-local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
-local on_attach = function(client, bufnr)
-  if client.supports_method("textDocument/formatting") then
-    u.buf_command(bufnr, "LspFormatting", function()
-      lsp_formatting(bufnr)
-    end)
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local bufnr = args.buf
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    --    if client.server_capabilities.completionProvider then
+    --      vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
+    --    end
+    if client.server_capabilities.definitionProvider then
+      vim.bo[bufnr].tagfunc = "v:lua.vim.lsp.tagfunc"
+    end
+    if client.supports_method("textDocument/formatting") then
+      u.buf_command(bufnr, "LspFormatting", function()
+        lsp_formatting(bufnr)
+      end)
 
-    vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      group = augroup,
-      buffer = bufnr,
-      command = "LspFormatting",
-    })
-  end
-end
+      vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        group = augroup,
+        buffer = bufnr,
+        command = "LspFormatting",
+      })
+    end
+  end,
+})
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+--
+--
+local lspconfig = require("lspconfig")
+local null_ls = require("null-ls")
+local ts_utils = require("nvim-lsp-ts-utils")
+local b = null_ls.builtins
 
-local servers = {
-  "tsserver",
-  "eslint",
-  "sorbet",
-  "solargraph",
-  "sumneko_lua",
-  "null-ls",
-  "terraform_lsp",
+local with_root_file = function(...)
+  local files = { ... }
+  return function(utils)
+    return utils.root_has_file(files)
+  end
+end
+
+local s = {}
+
+s["tsserver"] = {
+  root_dir = lspconfig.util.root_pattern("package.json"),
+  init_options = ts_utils.init_options,
+  capabilities = capabilities,
+  on_attach = function(client, bufnr)
+    ts_utils.setup({
+      -- debug = true,
+      auto_inlay_hints = false,
+      import_all_scan_buffers = 100,
+      update_imports_on_move = true,
+      -- filter out dumb module warning
+      filter_out_diagnostics_by_code = { 80001 },
+    })
+    ts_utils.setup_client(client)
+
+    u.buf_map(bufnr, "n", "gs", ":TSLspOrganize<CR>")
+    u.buf_map(bufnr, "n", "gr", ":TSLspRenameFile<CR>")
+    u.buf_map(bufnr, "n", "gI", ":TSLspImportAll<CR>")
+  end,
 }
 
-for _, server in pairs(servers) do
-  require("lsp.clients." .. server).setup(on_attach, capabilities)
+s["eslint"] = {
+  root_dir = lspconfig.util.root_pattern(".eslintrc", ".eslintrc.js", ".eslintrc.json"),
+  on_attach = function(client, bufnr)
+    client.server_capabilities.documentFormattingProvider = true
+  end,
+  capabilities = capabilities,
+  settings = {
+    format = {
+      enable = true,
+    },
+  },
+  handlers = {
+    -- this error shows up occasionally when formatting
+    -- formatting actually works, so this will supress it
+    ["window/showMessageRequest"] = function(_, result)
+      if result.message:find("ENOENT") then
+        return vim.NIL
+      end
+
+      return vim.lsp.handlers["window/showMessageRequest"](nil, result)
+    end,
+  },
+}
+
+s["sorbet"] = {
+  capabilities = capabilities,
+}
+
+s["solargraph"] = {
+  capabilities = capabilities,
+}
+
+s["sumneko_lua"] = {
+  capabilities = capabilities,
+  settings = {
+    Lua = {
+      workspace = {
+        library = {
+          [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+          [vim.fn.stdpath("config") .. "/lua"] = true,
+        },
+      },
+      diagnostics = {
+        globals = {
+          "global",
+          "vim",
+          "use",
+          "describe",
+          "it",
+          "assert",
+          "before_each",
+          "after_each",
+        },
+      },
+    },
+  },
+}
+
+s["terraformls"] = {
+  capabilities = capabilities,
+}
+s["terraform_lsp"] = {
+  capabilities = capabilities,
+}
+
+for server, config in pairs(s) do
+  lspconfig[server].setup(config)
 end
+
+null_ls.setup({
+  debug = true,
+  sources = {
+    b.diagnostics.rubocop.with({
+      condition = with_root_file(".rubocop.yml"),
+      command = "bundle",
+      args = { "exec", "rubocop", "-f", "json", "--stdin", "$FILENAME" },
+    }),
+    b.diagnostics.semgrep.with({
+      condition = with_root_file(".semgrep.yml"),
+    }),
+
+    b.formatting.trim_whitespace.with({
+      filetypes = { "tmux", "zsh" },
+    }),
+    b.formatting.rubocop.with({
+      condition = with_root_file(".rubocop.yml"),
+      command = "bundle",
+      args = { "exec", "rubocop", "--auto-correct", "-f", "quiet", "--stderr", "--stdin", "$FILENAME" },
+    }),
+
+    -- b.formatting.shfmt,
+    -- b.formatting.stylua,
+    -- b.formatting.terraform_fmt,
+  },
+})
