@@ -29,6 +29,8 @@ local lsp_formatting = function(bufnr)
   lsp.buf.format({ bufnr = bufnr })
 end
 
+local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
     local bufnr = args.buf
@@ -72,10 +74,11 @@ end
 
 local s = {}
 
+-- pairs of lsp server names and configs
+
 s["tsserver"] = {
   root_dir = lspconfig.util.root_pattern("package.json"),
   init_options = ts_utils.init_options,
-  capabilities = capabilities,
   on_attach = function(client, bufnr)
     ts_utils.setup({
       -- debug = true,
@@ -98,7 +101,6 @@ s["eslint"] = {
   on_attach = function(client, bufnr)
     client.server_capabilities.documentFormattingProvider = true
   end,
-  capabilities = capabilities,
   settings = {
     format = {
       enable = true,
@@ -117,16 +119,11 @@ s["eslint"] = {
   },
 }
 
-s["sorbet"] = {
-  capabilities = capabilities,
-}
+s["sorbet"] = {}
 
-s["solargraph"] = {
-  capabilities = capabilities,
-}
+s["solargraph"] = {}
 
 s["sumneko_lua"] = {
-  capabilities = capabilities,
   settings = {
     Lua = {
       workspace = {
@@ -151,15 +148,13 @@ s["sumneko_lua"] = {
   },
 }
 
-s["terraformls"] = {
-  capabilities = capabilities,
-}
-s["terraform_lsp"] = {
-  capabilities = capabilities,
-}
+s["terraformls"] = {}
+s["terraform_lsp"] = {}
 
 for server, config in pairs(s) do
-  lspconfig[server].setup(config)
+  local c = config
+  c["capabilities"] = capabilities
+  lspconfig[server].setup(c)
 end
 
 null_ls.setup({

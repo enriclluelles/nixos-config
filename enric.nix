@@ -61,6 +61,7 @@ in {
       zathura
       jq
       bat
+      zoom-us
     ];
   };
   programs = {
