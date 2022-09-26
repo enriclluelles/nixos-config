@@ -11,25 +11,36 @@
   ];
 
   unstable = with pkgs; [
-    neovim
-    git
-    chezmoi
+    bat
+    chromium
+    go
+    gopls
+    htop
+    jq
+    ripgrep
+    tig
+    zathura
+    zoom-us
     alejandra
+    awscli2
+    chezmoi
+    chromium
+    docker
+    firefox
+    fish
+    git
+    gnome3.gnome-tweaks
+    gnumake
+    libinput-gestures
+    neovim
+    nix-index
+    nodejs
+    slack
+    tdesktop
     terraform
     vim
     wget
-    docker
-    gnome3.gnome-tweaks
-    libinput-gestures
-    firefox
     wmctrl
-    slack
-    chromium
-    tdesktop
-    nodejs
-    fish
-    awscli2
-    nix-index
   ];
 in {
   imports = [
@@ -41,6 +52,8 @@ in {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
+
+  virtualisation.docker.enable = true;
 
   networking.hostName = "xps15"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -122,7 +135,7 @@ in {
   users.users.enric = {
     isNormalUser = true;
     description = "enric";
-    extraGroups = ["networkmanager" "wheel" "input"];
+    extraGroups = ["networkmanager" "wheel" "input" "docker"];
     shell = pkgs.fish;
   };
 

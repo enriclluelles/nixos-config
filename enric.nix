@@ -51,18 +51,7 @@ in {
       gss = "git status --short";
     };
     stateVersion = "22.05";
-    packages = with pkgs; [
-      tig
-      chromium
-      ripgrep
-      htop
-      go
-      gopls
-      zathura
-      jq
-      bat
-      zoom-us
-    ];
+    packages = [];
   };
   programs = {
     git = {
