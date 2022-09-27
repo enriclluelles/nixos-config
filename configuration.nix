@@ -26,6 +26,7 @@
     chezmoi
     chromium
     docker
+    docker-compose
     firefox
     fish
     git
@@ -41,6 +42,9 @@
     vim
     wget
     wmctrl
+    k9s
+    kubectl
+    kustomize
   ];
 in {
   imports = [
