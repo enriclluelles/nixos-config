@@ -128,6 +128,7 @@ in {
       rubyPackages.solargraph
       sumneko-lua-language-server
       nodePackages.typescript-language-server
+      nodePackages.prettier
       gopls
       terraform-ls
       terraform-lsp

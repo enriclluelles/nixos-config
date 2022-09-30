@@ -46,12 +46,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
         lsp_formatting(bufnr)
       end)
 
-      vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        group = augroup,
-        buffer = bufnr,
-        command = "LspFormatting",
-      })
+      --     vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+      --     vim.api.nvim_create_autocmd("BufWritePre", {
+      --       group = augroup,
+      --       buffer = bufnr,
+      --       command = "LspFormatting",
+      --     })
     end
   end,
 })
@@ -181,5 +181,25 @@ null_ls.setup({
     -- b.formatting.shfmt,
     -- b.formatting.stylua,
     -- b.formatting.terraform_fmt,
+  },
+})
+
+local prettier = require("prettier")
+
+prettier.setup({
+  filetypes = {
+    "css",
+    "graphql",
+    "html",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "less",
+    "markdown",
+    "scss",
+    "typescript",
+    "typescriptreact",
+    "yaml",
+    "ruby",
   },
 })

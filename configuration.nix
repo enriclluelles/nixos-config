@@ -45,6 +45,8 @@
     k9s
     kubectl
     kustomize
+    nodePackages.yarn
+    xclip
   ];
 in {
   imports = [
