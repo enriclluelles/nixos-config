@@ -29,9 +29,13 @@
       };
     };
 
+    customoverlay = final: prev: {
+    };
+
     overlays = [
       overlay-22_05
       neovim-nightly-overlay.overlay
+      customoverlay
     ];
   in {
     nixosConfigurations."xps15" = nixosSystem {
