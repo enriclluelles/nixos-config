@@ -47,6 +47,7 @@
     kustomize
     nodePackages.yarn
     xclip
+    _1password-gui-beta
   ];
 in {
   imports = [
