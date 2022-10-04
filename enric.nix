@@ -144,9 +144,4 @@ in {
     source = ./neovim/lua;
     recursive = true;
   };
-
-  xdg.desktopEntries.slack = {
-    name = "Slack";
-    exec = "slack --ozone-platform-hint=auto --enable-features=WebRTCPipeWireCapturer";
-  };
 }
