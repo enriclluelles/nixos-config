@@ -30,7 +30,7 @@
     firefox
     fish
     git
-    gnome3.gnome-tweaks
+    gnome.gnome-tweaks
     gnumake
     libinput-gestures
     neovim
@@ -132,9 +132,9 @@ in {
   # services.xserver.libinput.enable = true;
 
   nix = {
-    package = pkgs.nixFlakes;
+    package = pkgs.nixVersions.stable;
     extraOptions =
-      lib.optionalString (config.nix.package == pkgs.nixFlakes)
+      lib.optionalString (config.nix.package == pkgs.nixVersions.stable)
       "experimental-features = nix-command flakes";
   };
 
