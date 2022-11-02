@@ -89,6 +89,17 @@ in {
       customPaneNavigationAndResize = true;
       disableConfirmationPrompt = true;
       historyLimit = 10000;
+      extraConfig = ''
+        bind c new-window -c '#{pane_current_path}'
+        bind-key t choose-tree
+        bind-key -T copy-mode-vi 'v' send-keys -X begin-selection
+        bind-key -T copy-mode-vi 'y' send-keys -X copy-pipe-and-cancel 'reattach-to-user-namespace pbcopy'
+
+        # Update default binding of `Enter` to also use copy-pipe
+        unbind -T copy-mode-vi Enter
+        bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
+        set -g mouse on
+      '';
       plugins = with pkgs.tmuxPlugins; [
         cpu
         resurrect
@@ -97,15 +108,6 @@ in {
           extraConfig = ''
             set -g @continuum-restore 'on'
             set -g @continuum-save-interval '60'
-            bind c new-window -c '#{pane_current_path}'
-            bind-key t choose-tree
-            bind-key -T copy-mode-vi 'v' send-keys -X begin-selection
-            bind-key -T copy-mode-vi 'y' send-keys -X copy-pipe-and-cancel 'reattach-to-user-namespace pbcopy'
-
-            # Update default binding of `Enter` to also use copy-pipe
-            unbind -T copy-mode-vi Enter
-            bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
-            set -g mouse on
           '';
         }
       ];

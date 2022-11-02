@@ -11,43 +11,47 @@
   ];
 
   unstable = with pkgs; [
-    bat
-    chromium
-    go
-    gopls
-    htop
-    jq
-    ripgrep
-    tig
-    zathura
-    zoom-us
+    _1password-gui-beta
     alejandra
     awscli2
+    bat
+    bind
     chezmoi
     chromium
+    chromium
+    clusterctl
     docker
     docker-compose
     firefox
     fish
+    fluxcd
     git
     gnome.gnome-tweaks
     gnumake
-    libinput-gestures
-    neovim
-    nix-index
-    nodejs
-    slack
-    tdesktop
-    terraform
-    vim
-    wget
-    wmctrl
+    go
+    gopls
+    htop
+    jq
     k9s
     kubectl
     kustomize
+    libinput-gestures
+    neovim
+    nix-index
     nodePackages.yarn
+    nodejs
+    ripgrep
+    slack
+    ssm-session-manager-plugin
+    tdesktop
+    terraform
+    tig
+    vim
+    wget
+    wmctrl
     xclip
-    _1password-gui-beta
+    zathura
+    zoom-us
   ];
 in {
   imports = [
